@@ -163,32 +163,28 @@
             return;
         }
 
-        // Отримуємо ім'я тегу та перше слово вмісту
+       // Отримуємо назву тегу та частину вмісту
         let tagName = node.tagName;
-        let content = node.innerText ? node.innerText.trim().split(/\s+/)[0] + "..." : "порожньо...";
-        
+        let content = node.innerText ? node.innerText.trim().slice(0, 20) + "..." : "порожньо...";
         let message = "Вузол: <" + tagName + ">\nВміст: " + content + "\n\n";
 
         let next = node.nextElementSibling;
         let prev = node.previousElementSibling;
 
-        // Логіка кнопок (confirm повертає true/false)
+        // Логіка кнопок із затримкою (щоб вікна не блокувалися браузером)
         if (!prev && next) {
-            // Якщо ми на самому початку
             if (confirm(message + "Бажаєте пройти до наступного вузла?")) {
-                callback(next); // Виклик callback для руху вперед
+                setTimeout(() => callback(next), 100);
             }
         } else if (prev && next) {
-            // Якщо ми всередині списку вузлів
             if (confirm(message + "Натисніть 'OK' щоб пройти ДАЛІ\nНатисніть 'Скасувати' щоб повернутися НАЗАД")) {
-                callback(next);
+                setTimeout(() => callback(next), 100);
             } else {
-                callback(prev);
+                setTimeout(() => callback(prev), 100);
             }
         } else if (prev && !next) {
-            // Якщо ми в самому кінці
             if (confirm(message + "Це останній вузол. Повернутися назад?")) {
-                callback(prev);
+                setTimeout(() => callback(prev), 100);
             }
         }
     }
