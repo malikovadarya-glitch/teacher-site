@@ -194,18 +194,15 @@
     }
 
     // Головна функція-обгортка (Entry point)
-    function startNavigation() {
-        // Починаємо з першого елемента всередині нашого контейнера
-        const container = document.querySelector('.container');
-        if (!container) return;
-        
-        const firstElement = container.firstElementChild;
+   function startNavigation() {
+    // Починаємо рух прямо від першого заголовка в body
+    const firstElement = document.body.firstElementChild;
+    
+    if (!firstElement) return;
 
-        // Створюємо функцію зворотного виклику, яка рекурсивно запускає процес
-        const walker = (targetNode) => processNode(targetNode, walker);
-
-        walker(firstElement);
-    }
+    const walker = (targetNode) => processNode(targetNode, walker);
+    walker(firstElement);
+}
 
     // Запускаємо скрипт через 2 секунди після завантаження сторінки
     window.onload = () => setTimeout(startNavigation, 2000);
