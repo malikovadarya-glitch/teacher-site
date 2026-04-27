@@ -151,5 +151,64 @@
         <li>ResearchGate</li>
     </ul>
 
+    <script>
+    /**
+     * Функція навігації (Логіка переміщення)
+     * @param {Element} node - поточний вузол
+     * @param {Function} callback - функція, що викликається для переходу далі
+     */
+    function processNode(node, callback) {
+        if (!node) {
+            alert("Роботу завершено.");
+            return;
+        }
+
+        // Отримуємо ім'я тегу та перше слово вмісту
+        let tagName = node.tagName;
+        let content = node.innerText ? node.innerText.trim().split(/\s+/)[0] + "..." : "порожньо...";
+        
+        let message = "Вузол: <" + tagName + ">\nВміст: " + content + "\n\n";
+
+        let next = node.nextElementSibling;
+        let prev = node.previousElementSibling;
+
+        // Логіка кнопок (confirm повертає true/false)
+        if (!prev && next) {
+            // Якщо ми на самому початку
+            if (confirm(message + "Бажаєте пройти до наступного вузла?")) {
+                callback(next); // Виклик callback для руху вперед
+            }
+        } else if (prev && next) {
+            // Якщо ми всередині списку вузлів
+            if (confirm(message + "Натисніть 'OK' щоб пройти ДАЛІ\nНатисніть 'Скасувати' щоб повернутися НАЗАД")) {
+                callback(next);
+            } else {
+                callback(prev);
+            }
+        } else if (prev && !next) {
+            // Якщо ми в самому кінці
+            if (confirm(message + "Це останній вузол. Повернутися назад?")) {
+                callback(prev);
+            }
+        }
+    }
+
+    // Головна функція-обгортка (Entry point)
+    function startNavigation() {
+        // Починаємо з першого елемента всередині нашого контейнера
+        const container = document.querySelector('.container');
+        if (!container) return;
+        
+        const firstElement = container.firstElementChild;
+
+        // Створюємо функцію зворотного виклику, яка рекурсивно запускає процес
+        const walker = (targetNode) => processNode(targetNode, walker);
+
+        walker(firstElement);
+    }
+
+    // Запускаємо скрипт через 2 секунди після завантаження сторінки
+    window.onload = () => setTimeout(startNavigation, 2000);
+</script>
 </body>
 </html>
